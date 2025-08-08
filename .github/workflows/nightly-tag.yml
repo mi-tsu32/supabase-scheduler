@@ -1,0 +1,19 @@
+name: Run tag_dreams_batch nightly
+
+on:
+  schedule:
+    # 毎日 UTC 18:00 = 日本時間 03:00
+    - cron: '0 18 * * *'
+  # 手動で試せるボタンも出す
+  workflow_dispatch:
+
+jobs:
+  run-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Supabase Edge Function
+        run: |
+          curl -X POST "https://wgekmagqwjropwmgfuqy.functions.supabase.co/tag_dreams_batch" \
+               -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+               -H "Content-Type: application/json" \
+               -d '{"mode":"rebuild_all"}'
